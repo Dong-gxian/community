@@ -2,6 +2,7 @@ package com.nowcoder.community.service;
 
 import com.nowcoder.community.dao.UserMapper;
 import com.nowcoder.community.entity.User;
+import com.nowcoder.community.util.CommunityConstant;
 import com.nowcoder.community.util.CommunityUtil;
 import com.nowcoder.community.util.MailClient;
 import org.apache.commons.lang3.StringUtils;
@@ -17,7 +18,7 @@ import java.util.Map;
 import java.util.Random;
 
 @Service
-public class UserService {
+public class UserService implements CommunityConstant {
     private UserMapper userMapper;
     private MailClient mailClient;
     private TemplateEngine templateEngine;
@@ -81,13 +82,14 @@ public class UserService {
         user.setCreateTime(new Date());
 
         userMapper.insertUser(user);
+        User usertemp = userMapper.selectByEmail(user.getEmail());
 
         //发送激活邮件
         Context context = new Context();//context是用来给模板引擎传参数的
         context.setVariable("email", user.getEmail());
         //生成激活链接，例如：
         //http://www.localhost:8080/community/activation/101/code
-        String url = domain + contextPath + "/activation/" + user.getId() + "/" + user.getActivationCode();
+        String url = domain + contextPath + "/activation/" + usertemp.getId() + "/" + user.getActivationCode();
         context.setVariable("url", url);
         //生成html样式的邮件内容
         String content = templateEngine.process("/mail/activation", context);
@@ -95,5 +97,20 @@ public class UserService {
 
         return map;
     }
+
+    public int activation(int userId, String code){
+        User user = userMapper.selectById(userId);
+        if(user.getStatus() == 1){
+            return ACTIVATION_REPEAT;
+        }
+        else if(user.getActivationCode().equals(code)){
+            userMapper.updateStatus(userId, 1);
+            return ACTIVATION_SUCCESS;
+        }
+        else {
+            return ACTIVATION_FAILURE;
+        }
+    }
+
 
 }
