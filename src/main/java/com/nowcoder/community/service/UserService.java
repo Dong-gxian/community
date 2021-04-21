@@ -32,7 +32,6 @@ public class UserService implements CommunityConstant {
     @Value("${server.servlet.context-path}")
     private String contextPath;
 
-
     @Autowired
     public UserService(UserMapper userMapper, MailClient mailClient, TemplateEngine templateEngine, LoginTicketMapper loginTicketMapper) {
         this.userMapper = userMapper;
@@ -156,5 +155,11 @@ public class UserService implements CommunityConstant {
         return map;
     }
 
+    public void logout(String ticket){
+        loginTicketMapper.updateStatus(ticket, 1);
+    }
 
+    public LoginTicket findLoginTicket(String ticket){
+        return loginTicketMapper.selectbyTicket(ticket);
+    }
 }
