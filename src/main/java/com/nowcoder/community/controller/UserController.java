@@ -28,17 +28,17 @@ import java.io.IOException;
 public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    @Value("${community.path.upload}")
     private String uploadPath;
+    @Value("${community.path.domain}")
     private String domain;
+    @Value("${server.servlet.context-path}")
     private String contextPath;
     private UserService userService;
     private HostHolder hostHolder;
 
     @Autowired
-    public UserController(UserService userService, HostHolder hostHolder,
-                          @Value("${community.path.upload}") String uploadPath,
-                          @Value("${community.path.domain}") String domain,
-                          @Value("${server.servlet.context-path}") String contextPath) {
+    public UserController(UserService userService, HostHolder hostHolder) {
         this.userService = userService;
         this.hostHolder = hostHolder;
     }
@@ -49,6 +49,7 @@ public class UserController {
     }
 
     @RequestMapping(path = "upload", method = RequestMethod.POST)
+    //这个名为headerImage的参数会自动接收post过来的名为headerImage的内容
     public String uploadHeader(MultipartFile headerImage, Model model) {
         if (headerImage == null) {
             model.addAttribute("error", "您还没有选择图片！");
@@ -77,7 +78,7 @@ public class UserController {
         //更新当前用户头像的web访问路径
         //例如http://localhost:8080/community/user/header/xxx.png
         User user = hostHolder.getUser();
-        String headerUrl = domain + contextPath + "/user/header" + fileName;
+        String headerUrl = domain + contextPath + "/user/header/" + fileName;
         userService.updateHeader(user.getId(), headerUrl);
 
         return "redirect:/index";
@@ -108,5 +109,8 @@ public class UserController {
 
     }
 
+    @RequestMapping(path = "password", method = RequestMethod.POST)
+    public String setPassword(){
 
+    }
 }
