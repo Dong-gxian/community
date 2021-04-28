@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -110,7 +111,40 @@ public class UserController {
     }
 
     @RequestMapping(path = "password", method = RequestMethod.POST)
-    public String setPassword(){
+    public String setPassword(String oldPassword, String newPassword, String confirmPassword, Model model,@CookieValue("ticket")String ticket) {
+        //空值处理
+        if (StringUtils.isBlank(oldPassword)) {
+            model.addAttribute("oldPasswordMsg", "原密码不能为空！");
+            return "/site/setting";
+        }
+        if (StringUtils.isBlank(newPassword)) {
+            model.addAttribute("newPasswordMsg", "新密码不能为空！");
+            return "/site/setting";
+        }
 
+        //检查新密码和原密码是否相同
+        if(oldPassword.equals(newPassword)){
+            model.addAttribute("newPasswordMsg", "新密码不能与原密码相同！");
+            return "/site/setting";
+        }
+
+        //检查新密码是否两次相同
+        if(!newPassword.equals(confirmPassword)){
+            model.addAttribute("confirmPasswordMsg", "两次输入不一样！");
+            return "/site/setting";
+        }
+        //检查原密码是否正确
+        User user = hostHolder.getUser();
+        oldPassword = CommunityUtil.md5(oldPassword + user.getSalt());
+        if (!user.getPassword().equals(oldPassword)) {
+            model.addAttribute("oldPasswordMsg", "原密码不正确！");
+            return "/site/setting";
+        }
+
+        //更改密码
+        userService.updatePassword(user.getId(), CommunityUtil.md5(newPassword + user.getSalt()));
+        //登出
+        userService.logout(ticket);
+        return "redirect:/login";
     }
 }
