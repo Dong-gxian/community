@@ -1,5 +1,6 @@
 package com.nowcoder.community.controller;
 
+import com.nowcoder.community.annotaton.LoginRequired;
 import com.nowcoder.community.entity.User;
 import com.nowcoder.community.service.UserService;
 import com.nowcoder.community.util.CommunityUtil;
@@ -44,11 +45,13 @@ public class UserController {
         this.hostHolder = hostHolder;
     }
 
+    @LoginRequired
     @RequestMapping(path = "/setting")
     public String getSettingPage() {
         return "/site/setting";
     }
 
+    @LoginRequired
     @RequestMapping(path = "upload", method = RequestMethod.POST)
     //这个名为headerImage的参数会自动接收post过来的名为headerImage的内容
     public String uploadHeader(MultipartFile headerImage, Model model) {
