@@ -10,12 +10,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
+    private final AlphaInterceptor interceptor;
+    private final LoginTicketInterceptor loginTicketInterceptor;
+    private final LoginRequiredInterceptor loginRequiredInterceptor;
+
     @Autowired
-    private AlphaInterceptor interceptor;
-    @Autowired
-    private LoginTicketInterceptor loginTicketInterceptor;
-    @Autowired
-    private LoginRequiredInterceptor loginRequiredInterceptor;
+    public WebMvcConfig(AlphaInterceptor interceptor, LoginTicketInterceptor loginTicketInterceptor, LoginRequiredInterceptor loginRequiredInterceptor) {
+        this.interceptor = interceptor;
+        this.loginTicketInterceptor = loginTicketInterceptor;
+        this.loginRequiredInterceptor = loginRequiredInterceptor;
+    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
