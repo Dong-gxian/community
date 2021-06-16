@@ -1,4 +1,4 @@
-$(function(){
+ $(function(){
 	$("#publishBtn").click(publish);
 });
 
