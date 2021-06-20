@@ -1,6 +1,8 @@
 package com.nowcoder.community.service;
 
 import com.nowcoder.community.dao.AlphaDao;
+import com.nowcoder.community.dao.DiscussPostMapper;
+import com.nowcoder.community.dao.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,10 @@ import javax.annotation.PreDestroy;
 //@Scope("prototype")
 public class AlphaService {
     private final AlphaDao alphaDao;
+    @Autowired
+    private UserMapper userMapper;
+    @Autowired
+    private DiscussPostMapper discussPostMapper;
 
     @Autowired
     AlphaService(AlphaDao alphaDao) {
