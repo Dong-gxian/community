@@ -5,7 +5,13 @@ import java.util.Date;
 public class Comment {
     private int id;
     private int userId;
+    /**
+     * 所评论对象的类型（帖子、评论）
+     */
     private int entityType;
+    /**
+     * 所评论对象的id
+     */
     private int entityId;
     private int targetId;
     private String content;

@@ -18,15 +18,16 @@ import java.lang.reflect.Method;
 public class LoginRequiredInterceptor implements HandlerInterceptor {
     @Autowired
     private HostHolder hostHolder;
+
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //判断拦截对象是不是一个方法
-        if(handler instanceof HandlerMethod){
+        if (handler instanceof HandlerMethod) {
             HandlerMethod handlerMethod = (HandlerMethod) handler;
             Method method = handlerMethod.getMethod();
             LoginRequired loginRequired = method.getAnnotation(LoginRequired.class);
-            if(loginRequired != null&&hostHolder.getUser()==null){
-                response.sendRedirect(request.getContextPath()+"/login");
+            if (loginRequired != null && hostHolder.getUser() == null) {
+                response.sendRedirect(request.getContextPath() + "/login");
                 return false;
             }
         }
