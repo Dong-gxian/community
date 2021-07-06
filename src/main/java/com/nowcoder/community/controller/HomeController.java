@@ -46,4 +46,9 @@ public class HomeController {
         model.addAttribute("discussPosts", posts);
         return "/index";//这个方法返回后，SpringMVC会将Model一起返回给view
     }
+
+    @RequestMapping(path = "/error", method = RequestMethod.GET)
+    public String getErrorPage(){
+        return "/error/500";
+    }
 }
