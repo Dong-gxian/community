@@ -4,6 +4,7 @@ import com.nowcoder.community.entity.User;
 import com.nowcoder.community.service.LikeService;
 import com.nowcoder.community.util.CommunityUtil;
 import com.nowcoder.community.util.HostHolder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -16,9 +17,16 @@ import java.util.Map;
 public class LikeController {
     private LikeService likeService;
     private HostHolder hostHolder;
+
+    @Autowired
+    public LikeController(LikeService likeService, HostHolder hostHolder) {
+        this.likeService = likeService;
+        this.hostHolder = hostHolder;
+    }
+
     @RequestMapping(path = "/like", method = RequestMethod.POST)
     @ResponseBody
-    public String like(int entityType, int entityId){
+    public String like(Integer entityType, Integer entityId){
         User user = hostHolder.getUser();
         //点赞
         likeService.like(user.getId(), entityType, entityId);

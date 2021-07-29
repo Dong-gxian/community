@@ -8,11 +8,11 @@ public class Comment {
     /**
      * 所评论对象的类型（帖子、评论）
      */
-    private int entityType;
+    private Integer entityType;
     /**
      * 所评论对象的id
      */
-    private int entityId;
+    private Integer entityId;
     private int targetId;
     private String content;
     private int status;
